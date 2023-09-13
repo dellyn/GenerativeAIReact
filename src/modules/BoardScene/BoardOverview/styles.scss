@@ -1,0 +1,36 @@
+.board {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .board-scenes {
+        display: flex;
+        margin: 0 auto;
+
+        &.horizontal {
+            align-items: center;
+            flex-direction: column;
+            overflow: scroll;
+            height: calc(100vh - 250px);
+        }
+
+        &.vertical {
+            overflow: scroll;
+            width: 100vw;
+            max-width: 1000px;
+            padding-bottom: 16px;
+
+            justify-content: center;
+
+            .scene {
+                width: 500px;
+                margin: 0 16px 0 0;
+
+                .image {
+                    width: 90%;
+                }
+            }
+        }
+    }
+}

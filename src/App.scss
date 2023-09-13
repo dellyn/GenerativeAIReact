@@ -1,0 +1,36 @@
+@import '@vars';
+
+body {
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1000px;
+  font-size: 18px;
+  // background: linear-gradient(159deg, rgb(188 194 251) 0%, rgb(0 4 15) 0%, rgb(0 29 113) 100%);
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+p,
+span,
+h1,
+h2,
+h3 {
+  font-size: 18px;
+  color: $primary-text
+}
+
+h1 {
+  text-align: center;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  list-style-type: 0;
+  list-style: none;
+}

@@ -1,0 +1,25 @@
+.scene {
+    width: 800px;
+    border-radius: 10px;
+    background: rgb(236, 236, 236);
+    padding: 24px;
+    text-align: center;
+
+    .scene-number {
+        font-weight: 700;
+        text-align: left;
+        margin-bottom: 8px;
+        font-size: 22px;
+    }
+
+    .image {
+        width: 360px;
+        height: 360px;
+        margin-bottom: 46px;
+        border-radius: 10px;
+    }
+}
+
+.add-scene-button {
+    margin: 24px 0;
+}

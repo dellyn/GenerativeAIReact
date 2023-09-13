@@ -1,0 +1,17 @@
+.base-textarea {
+    width: 100%;
+    padding: 0;
+    border: none;
+    outline: none;
+    resize: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+    appearance: none;
+}
+
+.base-textarea:focus {
+    outline: none;
+}
