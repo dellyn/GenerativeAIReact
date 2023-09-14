@@ -18,6 +18,17 @@
         margin-bottom: 46px;
         border-radius: 10px;
     }
+
+    .input-container {
+        display: flex;
+        align-items: end;
+
+
+        .textarea-with-label {
+            width: 100%;
+            margin-right: 24px;
+        }
+    }
 }
 
 .add-scene-button {

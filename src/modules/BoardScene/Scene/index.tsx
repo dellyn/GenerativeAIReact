@@ -1,41 +1,38 @@
-/* eslint-disable camelcase */
 import classnames from 'classnames';
 import { image_base64 } from '#tmp/image.json';
 import { TextAreaWithLabel } from '#components/inputs/TextAreaWithLabel';
-import './styles.scss';
-import { SceneSettings } from '../SceneSettings';
 import AddChapterIcon from '#icons/AddChapterIcon';
 import { AddSceneButton } from '#components/AddSceneButton';
+import { IconButton } from '#components/buttons/IconButton';
+import { RefreshCircularIcon } from '#icons/RefreshCircularIcon';
+import './styles.scss';
 
-export const Scene = ({ data, changeBoardData, addScene, sceneRef, scenes, index }) => {
+export const Scene = ({ data,
+  script,
+  changeSceneDescription,
+  addScene, sceneRef, scenes, index }) => {
   const containerClassName = classnames('scene');
-
-  function changeSceneDescription({ target }) {
-    changeBoardData({
-      ...data,
-      description: target.value
-    });
-  }
-
 
   return (
     <>
       <div className={containerClassName}
         ref={sceneRef}
       >
+        {/* <SceneSceleton /> */}
         <div className="scene-number">
           Scene {index + 1}
         </div>
         <img src={`data:image/jpeg;base64,${image_base64}`}
           alt="image"
           className='image' />
-        <SceneSettings />
+        {/* <SceneSettings /> */}
         <div className="input-container">
           <TextAreaWithLabel
             labelProps={{ value: 'Description' }}
-            inputProps={{ value: data.description, onChange: changeSceneDescription }} />
+            inputProps={{ value: script ? script[index] : '', onChange: ({ target }) => changeSceneDescription(index, target.value) }} />
+          <IconButton
+            icon={<RefreshCircularIcon className='icon' />} />
         </div>
-
       </div>
       {index + 1 < scenes.length && (
         <AddSceneButton

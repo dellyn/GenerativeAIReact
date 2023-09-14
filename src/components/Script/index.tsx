@@ -1,19 +1,18 @@
 
 import classNames from 'classnames';
-import { TextAreaWithLabel } from '#components/inputs/TextAreaWithLabel';
-import { Button } from '#components/buttons/Button';
 import './styles.scss'
-import { useState } from 'react';
+import { AutoResizingTextarea } from '#components/inputs/AutoResizingTextarea';
 
-const Script = () => {
+
+const Script = ({ script = [], setScript }) => {
     const containerClassName = classNames('script-container');
-    const [script, setScript] = useState("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-    );
+    console.log('script', script);
 
+    const parsedString = script ? script.map((line, index) => `Scene ${index + 1}: ${line}`.trim())?.join('\n\n') : ''
     return (
         <div className={containerClassName}>
-            <TextAreaWithLabel inputProps={{ value: "script" }} />
-            <Button className='generate-button'>Generate</Button>
+            <h2>Script</h2>
+            <AutoResizingTextarea value={parsedString} />
         </div>
     );
 };

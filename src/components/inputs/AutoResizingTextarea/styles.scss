@@ -1,0 +1,12 @@
+.dynamic-textarea {
+    width: 100%;
+    height: auto;
+    max-height: 37vh;
+    overflow-y: auto;
+    resize: none;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    min-height: 40px;
+}

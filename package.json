@@ -15,7 +15,10 @@
     "eslint-plugin-html": "^7.1.0",
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-loading-skeleton": "^3.3.1",
+    "react-query": "^3.39.3",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",

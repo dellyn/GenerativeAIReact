@@ -1,7 +1,7 @@
-import BaseTextarea from '#components/atoms/inputs/BaseTextarea';
 import { FC, TextareaHTMLAttributes } from 'react';
 import { Label } from '#components/labels/Label';
 import { BaseLabelProps } from '#components/labels/Label/types';
+import { AutoResizingTextarea } from '../AutoResizingTextarea';
 import './styles.scss';
 
 interface BaseTextareaProps {
@@ -14,7 +14,7 @@ export const TextAreaWithLabel: FC<BaseTextareaProps> = ({ labelProps = {}, inpu
         <div className="textarea-with-label">
             {labelProps.value && <Label {...labelProps}
                 htmlFor={inputProps.id}>{labelProps.value}</Label>}
-            <BaseTextarea
+            <AutoResizingTextarea
                 {...inputProps}
                 id={inputProps.id}
                 className={`textarea ${inputProps.className}`}

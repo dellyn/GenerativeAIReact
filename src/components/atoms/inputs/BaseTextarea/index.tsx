@@ -1,13 +1,13 @@
-import { FC, TextareaHTMLAttributes } from 'react';
+import { forwardRef } from 'react';
+import { BaseTextareaProps } from './types';
 import './styles.scss'
-interface BaseTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-    label?: string;
-}
 
-const BaseTextarea: FC<BaseTextareaProps> = (props) => {
+
+export const BaseTextarea = forwardRef<HTMLTextAreaElement, BaseTextareaProps>(({ className, ...restProps }, ref) => {
     return (
-        <textarea {...props} className={`base-textarea ${props.className}`} />
+        <textarea
+            {...restProps}
+            ref={ref}
+            className={`base-textarea ${className}`} />
     );
-};
-
-export default BaseTextarea;
+});
