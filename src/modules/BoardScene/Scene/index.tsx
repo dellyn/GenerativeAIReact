@@ -7,12 +7,11 @@ import { RefreshCircularIcon } from '#icons/RefreshCircularIcon';
 import { Skeleton } from '#components/loaders/Skeleton';
 import { fetchImageBasedOnDescription } from '../../../requests';
 import { useEffect, useState } from 'react';
-import './styles.scss';
 import { ImageThin } from '#icons/ImageThin';
+import './styles.scss';
 
 export const Scene = ({
   sceneData,
-  script,
   changeSceneDescription,
   addScene,
   sceneRef,
@@ -63,12 +62,13 @@ export const Scene = ({
         <div className="scene-number">
           Scene {index + 1}
         </div>
-
         <div className="image-container">
           {activeImage?.img64 ? (
-            <img src={`data:image/jpeg;base64,${activeImage?.img64}`}
-              alt="image"
-              className='image-preview' />
+            <>
+              <img src={`data:image/jpeg;base64,${activeImage?.img64}`}
+                alt="image"
+                className='image-preview' />
+            </>
           ) : (
             <> {isFetchingImages ? <Skeleton width={360} height={360} /> : <div className="image-preview placeholder"><ImageThin className='icon' /></div>}</>
           )}
@@ -95,6 +95,17 @@ export const Scene = ({
                 onClick={regenerateImage}
                 icon={<RefreshCircularIcon className='icon' />} />
             </>
+          )}
+        </div>
+        <div className="voice-over-input-container">
+          {isFetchingScript ? <Skeleton width={750} height={55} /> : (
+            <TextAreaWithLabel
+              labelProps={{ value: 'Voice Over' }}
+              inputProps={{
+                disabled: true,
+                value: sceneData.voiceOver,
+                onChange: ({ target }) => changeSceneDescription(index, target.value)
+              }} />
           )}
         </div>
       </div>

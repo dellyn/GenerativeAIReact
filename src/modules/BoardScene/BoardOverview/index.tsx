@@ -7,13 +7,13 @@ import { AddSceneButton } from '#components/AddSceneButton';
 import { SceneSceleton } from '../Scene/SceneSceleton';
 import './styles.scss';
 
-export const BoardOverview = ({ script, setScript, scenesArr,
-  setScenesArr, isFetchingImages, isFetchingScript = true }) => {
+export const BoardOverview = ({ script, voiceOver, setScript, scenesArr,
+  setScenesArr, isFetchingScript, fetching }) => {
   const containerClassName = classnames('board');
   const scenesRef = useRef([])
 
   function addScene(index) {
-    setScenesArr([...scenesArr, generateSceneTemplate(index, script)])
+    setScenesArr([...scenesArr, generateSceneTemplate(index, script, voiceOver)])
   }
 
   function changeSceneDescription(sceneIndex, updatedDescription) {
@@ -26,18 +26,22 @@ export const BoardOverview = ({ script, setScript, scenesArr,
     setScript(updatedScript)
   }
 
-  useEffect(() => {
-    if (script?.length && scenesArr?.length !== script?.length) {
-      console.log('GENERATE SCENE TEMPLATE');
+  function assignDescriptionToScenes() {
+    if (script?.length && voiceOver?.length) {
+      if (scenesArr.length < script.length) {
+        const scenesArrWithScript = script.map((description, index) => {
+          const currentScene = scenesArr[index]
+          return currentScene?.description ? currentScene : generateSceneTemplate(index, script, voiceOver)
 
-      setScenesArr(script.map((description, index) => {
-        const currentScene = scenesArr[index]
-        return currentScene ? currentScene : generateSceneTemplate(index, script)
+        })
+        setScenesArr(scenesArrWithScript)
 
-      }))
+      }
     }
-
-  }, [script?.length]);
+  }
+  useEffect(() => {
+    assignDescriptionToScenes()
+  }, [scenesArr.length, script.length, voiceOver.length]);
 
   console.log('BoardOverview', scenesArr);
 
@@ -49,17 +53,13 @@ export const BoardOverview = ({ script, setScript, scenesArr,
           {scenesArr.map((sceneData, index) => <Scene
             key={sceneData.id}
             addScene={addScene}
-            sceneData={{
-              ...sceneData,
-              description: sceneData.desciption || script[index]
-            }}
+            sceneData={sceneData}
             changeSceneDescription={changeSceneDescription}
             sceneRef={scenesRef?.current[sceneData.index]}
             scenes={scenesArr}
             index={index}
-            script={script}
             isFetchingScript={isFetchingScript}
-            isFetchingImages={isFetchingImages}
+            isFetchingImages={fetching[sceneData.sceneId]}
           />)}
           {isFetchingScript && scenesArr.length === 1 && (
             <>

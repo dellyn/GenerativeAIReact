@@ -2,10 +2,12 @@ import { Brief } from '#components/Brief';
 import Script from '#components/Script';
 import { BoardOverview } from '#modules/BoardScene/BoardOverview';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { convertScriptFromBrief, fetchImagesBasedOnFullScript } from './requests';
 import { BoardData } from '#logic/types';
 import './App.scss';
+
+import { Header } from '#components/Header';
 
 // const scriptData = [
 //   " An animated map of Ukraine appears on the screen. Red lines start from one city and travel to another, representing package deliveries.",
@@ -41,11 +43,14 @@ it's too far. Then it see that on the map new post office located just near to h
 // }
 
 function App() {
-  const [script, setScript] = useState(scriptData);
   const [brief, setBrief] = useState(placeholder);
+  const [script, setScript] = useState(['']);
+  const [voiceOver, setVoiceOver] = useState(['']);
   // const [sceneImages, setSceneImages] = useState([dummySceneData]);
   const [scenesArr, setScenesArr] = useState<BoardData>([]);
-  const [isFetchingImages, setIsFetchingImages] = useState(false);
+  const [fetching, setFetching] = useState({
+    sceneId: true
+  });
 
 
   const { isLoading, isFetching, data, refetch: generateScriptBasedOnBrief } = useQuery(
@@ -62,6 +67,7 @@ function App() {
       return prevScenesArr.map((sceneData, index) => {
         if (sceneData.sceneId === imageData.sceneId) {
           return {
+            description: imageData.description,
             ...imageData,
             images: [...sceneData.images, { img64: imageData.img64, id: imageData.id }],
           };
@@ -71,61 +77,85 @@ function App() {
     });
   }
 
-  async function runRequests() {
+  async function generateImages() {
+    console.log('generateImages', scenesArr);
+
     const mappedScenesPayload = scenesArr.map((scene, index) => {
       return [{
         description: scene.description,
+        voiceOver: scene.voiceOver,
         scene_id: scene.sceneId,
         index,
         from_scratch: true,
         example_img_id: null
       }]
     })
-    setIsFetchingImages(true)
-    Promise.all(mappedScenesPayload.map(async (payload) => {
-      const data = await fetchImagesBasedOnFullScript(JSON.stringify(payload))
-      mapImagesToScenes(data[0])
-    })).then(() => {
-      setIsFetchingImages(false)
-    })
+
+    Promise.all(
+      mappedScenesPayload.map(async (payload, index) => {
+        setFetching((prevValue) => {
+          return {
+            ...prevValue,
+            [payload[0].scene_id]: true,
+          };
+        });
+
+        try {
+          const data = await fetchImagesBasedOnFullScript(JSON.stringify(payload));
+          mapImagesToScenes(data[0]);
+        } catch (error) {
+          console.error("Failed to fetch images for scene", payload[0].scene_id, error);
+        } finally {
+          setFetching((prevValue) => {
+            return {
+              ...prevValue,
+              [payload[0].scene_id]: false,
+            };
+          });
+        }
+      })
+    )
 
   }
 
-
-
   useEffect(() => {
-    if (data) {
-      setScript(data)
+    if (data?.description) {
+      setScript(data.description)
+      setVoiceOver(data.voiceOver)
     }
   }, [data]);
 
 
+
   return (
     <div className='app'>
-      <h1>AI HOUSE</h1>
+      <Header />
       <div className="view">
         <section className="text-container">
           <Brief
             brief={brief}
             setBrief={setBrief}
-            setScript={setScript}
             isLoading={isLoading || isFetching}
             generateScriptBasedOnBrief={generateScriptBasedOnBrief}
           />
           <Script
             script={script}
-            scenesArr={scenesArr}
-            setScript={setScript}
+            isFetchingScript={isLoading || isFetching}
+            generateImagesBasedOnScript={generateImages}
+          />
+          {/* <VoiceOver
+            script={voiceOver}
             isFetchingScript={isLoading || isFetching}
             generateImagesBasedOnScript={runRequests}
-          />
+          /> */}
         </section>
         <section className="board-container">
           <BoardOverview
             script={script}
+            voiceOver={voiceOver}
             setScript={setScript}
             isFetchingScript={isLoading || isFetching}
-            isFetchingImages={isFetchingImages}
+            fetching={fetching}
             scenesArr={scenesArr}
             setScenesArr={setScenesArr}
           />

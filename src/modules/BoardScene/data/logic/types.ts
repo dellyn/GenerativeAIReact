@@ -8,6 +8,7 @@ interface RawSceneImageData {
 interface RawSceneData {
     sceneId: string,
     description: string
+    voiceOver: string
     images: RawSceneImageData[]
 }
 

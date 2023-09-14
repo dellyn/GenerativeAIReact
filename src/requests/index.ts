@@ -1,4 +1,4 @@
-const base = 'https://37c8-41-132-66-17.ngrok-free.app'
+const base = 'https://2c47-194-44-160-146.ngrok-free.app'
 
 export const convertScriptFromBrief = async ({ queryKey }) => {
     const [_key, { brief }] = queryKey;

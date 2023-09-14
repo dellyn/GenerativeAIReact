@@ -5,7 +5,7 @@ import { ChangeEvent } from 'react';
 import { AutoResizingTextarea } from '#components/inputs/AutoResizingTextarea';
 import './styles.scss'
 
-export const Brief = ({ brief, setBrief, isLoading, setScript, generateScriptBasedOnBrief }) => {
+export const Brief = ({ brief, setBrief, isLoading, generateScriptBasedOnBrief }) => {
     const containerClassName = classNames('script-container');
     function changeBrief({ target }: ChangeEvent<HTMLTextAreaElement>) {
         setBrief(target?.value)
@@ -19,12 +19,11 @@ export const Brief = ({ brief, setBrief, isLoading, setScript, generateScriptBas
     return (
         <div className={containerClassName}>
             <h2>Brief</h2>
-            {isLoading && 'Loading...'}
             <AutoResizingTextarea
                 value={brief}
                 onChange={changeBrief}
             />
-            <Button className='generate-button' onClick={sendScript}>Generate Brief</Button>
+            <Button className='generate-button' onClick={sendScript} disabled={isLoading}>Generate Brief</Button>
         </div>
     );
 };
