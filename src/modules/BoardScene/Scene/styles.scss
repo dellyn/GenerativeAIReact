@@ -1,3 +1,5 @@
+@import '@vars';
+
 .scene {
     width: 800px;
     border-radius: 10px;
@@ -12,12 +14,57 @@
         font-size: 22px;
     }
 
-    .image {
-        width: 360px;
-        height: 360px;
-        margin-bottom: 46px;
-        border-radius: 10px;
+    .image-container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .images-thumbnails {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            overflow: scroll;
+            padding: 11px 0;
+            margin-bottom: 24px;
+
+            .image-thumbnail-container {
+                border-radius: 4px;
+
+                &.active {
+                    .image-thumbnail {
+                        border: 2px solid $accent;
+                    }
+                }
+
+                &:hover {
+                    .image-thumbnail {
+                        box-shadow: 0 0 11px rgba(13, 33, 110, .8);
+                    }
+                }
+
+                .image-thumbnail {
+                    border-radius: 4px;
+                    width: 83px;
+                    height: 83px;
+                    margin: 0 8px;
+                    cursor: pointer;
+                    transition: all 0.15s ease-in-out;
+
+
+                }
+            }
+        }
+
+        .image-preview {
+            width: 360px;
+            height: 360px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+        }
     }
+
+
 
     .input-container {
         display: flex;

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { AutoResizingTextareaProps } from './types';
 import './styles.scss';
 
-export function AutoResizingTextarea({ value = '', onChange, ...restProps }: AutoResizingTextareaProps) {
+export function AutoResizingTextarea({ value = '', className, onChange, ...restProps }: AutoResizingTextareaProps) {
     const textareaRef = useRef(null);
 
     useEffect(() => {
@@ -20,9 +20,10 @@ export function AutoResizingTextarea({ value = '', onChange, ...restProps }: Aut
             ref={textareaRef}
             value={value}
             onChange={onChange}
-            className="dynamic-textarea"
+            className={`dynamic-textarea ${className}`}
             rows={1}
         />
+
     );
 }
 

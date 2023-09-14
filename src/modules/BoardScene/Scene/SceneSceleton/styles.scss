@@ -1,4 +1,6 @@
 .scene-sceleton {
+    margin-top: 24px;
+
     .label {
         margin-right: auto;
         text-align: left;
@@ -6,5 +8,6 @@
 
     .input-container {
         text-align: left;
+        display: block;
     }
 }

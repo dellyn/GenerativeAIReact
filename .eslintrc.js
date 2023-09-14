@@ -2,24 +2,6 @@ const { join } = require('path');
 
 const tsConfigFile = require(join(__dirname, 'tsconfig.json'));
 
-const html = [
-  {
-    files: ['*.html'],
-    parser: '@html-eslint/parser',
-    plugins: [
-      '@html-eslint',
-      'html',
-    ],
-    extends: ['plugin:@html-eslint/recommended'],
-    rules: {
-      '@html-eslint/no-duplicate-id': 'error',
-      '@html-eslint/indent': ['error', 2],
-    },
-  },
-].map((v) => ({
-  ...v,
-  [Symbol('eslint-category')]: 'html',
-}));
 
 const json = [
   {
@@ -82,16 +64,6 @@ const typescript = [
     },
   },
   {
-    files: ['jest.config.ts'],
-    rules: {
-      'global-require': 0,
-      'import/no-dynamic-require': 0,
-      '@typescript-eslint/no-var-requires': 0,
-      '@typescript-eslint/no-non-null-assertion': 0,
-      '@typescript-eslint/no-explicit-any': 0,
-    },
-  },
-  {
     files: ['.imports/**/*.ts'],
     rules: {
       '@typescript-eslint/ban-ts-comment': 0,
@@ -143,7 +115,6 @@ module.exports = {
   overrides: [
     ...js,
     ...typescript,
-    ...html,
     ...json,
   ],
 };

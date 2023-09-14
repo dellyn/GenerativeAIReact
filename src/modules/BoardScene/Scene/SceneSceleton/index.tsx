@@ -3,7 +3,7 @@ import { Skeleton } from '#components/loaders/Skeleton';
 import './styles.scss'
 export const SceneSceleton = () => {
 
-    const containerClassName = classnames('scene-sceleton');
+    const containerClassName = classnames('scene-sceleton scene');
 
     return (
         <div className={containerClassName}>

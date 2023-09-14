@@ -6,6 +6,8 @@ interface RawSceneImageData {
     id: string
 }
 interface RawSceneData {
+    sceneId: string,
+    description: string
     images: RawSceneImageData[]
 }
 
@@ -13,9 +15,7 @@ interface RawSceneData {
 type SceneImageData = Omit<RawSceneImageData, 'image'>
 interface SceneForm {
     description: string
-    fromScratch: boolean
-    image?: SceneImageData
-    index: number
+    sceneId: string
 }
 export type SceneData = SceneForm & RawSceneData;
 export type BoardPayload = SceneForm[]

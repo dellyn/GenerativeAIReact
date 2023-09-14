@@ -6,12 +6,12 @@ import { Scene } from '../Scene';
 import AddChapterIcon from '#icons/AddChapterIcon';
 import { AddSceneButton } from '#components/AddSceneButton';
 import './styles.scss';
+import { SceneSceleton } from '../Scene/SceneSceleton';
 
-const defaultData = generateBoardTemplate();
 
-export const BoardOverview = ({ script, setScript }) => {
+export const BoardOverview = ({ script, setScript, scenesArr,
+  setScenesArr, isFetchingImages, isFetchingScript = true }) => {
   const containerClassName = classnames('board');
-  const [scenesArr, setScenesArr] = useState<BoardData>(defaultData);
   const scenesRef = useRef([])
 
   function addScene(index) {
@@ -39,12 +39,10 @@ export const BoardOverview = ({ script, setScript }) => {
 
   }, [script?.length]);
 
-
-
   return (
     <>
       <div className={containerClassName}>
-        Board Overview
+        <h2>Storyboard</h2>
         <div className="board-scenes horizontal">
           {scenesArr.map((sceneData, index) => <Scene
             addScene={addScene}
@@ -54,7 +52,15 @@ export const BoardOverview = ({ script, setScript }) => {
             scenes={scenesArr}
             index={index}
             script={script}
+            isFetchingScript={isFetchingScript}
+            isFetchingImages={isFetchingImages}
           />)}
+          {isFetchingScript && scenesArr.length === 1 && (
+            <>
+              <SceneSceleton />
+              <SceneSceleton />
+            </>
+          )}
         </div>
       </div >
       <AddSceneButton
