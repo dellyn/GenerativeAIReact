@@ -1,13 +1,11 @@
 import classnames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
-import { BoardData } from '#logic/types';
-import { generateBoardTemplate, generateSceneTemplate } from '#modules/BoardScene/data';
+import { useEffect, useRef, } from 'react';
+import { generateSceneTemplate } from '#modules/BoardScene/data';
 import { Scene } from '../Scene';
 import AddChapterIcon from '#icons/AddChapterIcon';
 import { AddSceneButton } from '#components/AddSceneButton';
-import './styles.scss';
 import { SceneSceleton } from '../Scene/SceneSceleton';
-
+import './styles.scss';
 
 export const BoardOverview = ({ script, setScript, scenesArr,
   setScenesArr, isFetchingImages, isFetchingScript = true }) => {
@@ -15,7 +13,7 @@ export const BoardOverview = ({ script, setScript, scenesArr,
   const scenesRef = useRef([])
 
   function addScene(index) {
-    setScenesArr([...scenesArr, generateSceneTemplate(index)])
+    setScenesArr([...scenesArr, generateSceneTemplate(index, script)])
   }
 
   function changeSceneDescription(sceneIndex, updatedDescription) {
@@ -30,14 +28,18 @@ export const BoardOverview = ({ script, setScript, scenesArr,
 
   useEffect(() => {
     if (script?.length && scenesArr?.length !== script?.length) {
+      console.log('GENERATE SCENE TEMPLATE');
 
-      setScenesArr(script.map((line, index) => {
+      setScenesArr(script.map((description, index) => {
         const currentScene = scenesArr[index]
-        return currentScene ? currentScene : generateSceneTemplate(index)
+        return currentScene ? currentScene : generateSceneTemplate(index, script)
+
       }))
     }
 
   }, [script?.length]);
+
+  console.log('BoardOverview', scenesArr);
 
   return (
     <>
@@ -45,8 +47,12 @@ export const BoardOverview = ({ script, setScript, scenesArr,
         <h2>Storyboard</h2>
         <div className="board-scenes horizontal">
           {scenesArr.map((sceneData, index) => <Scene
+            key={sceneData.id}
             addScene={addScene}
-            data={sceneData}
+            sceneData={{
+              ...sceneData,
+              description: sceneData.desciption || script[index]
+            }}
             changeSceneDescription={changeSceneDescription}
             sceneRef={scenesRef?.current[sceneData.index]}
             scenes={scenesArr}

@@ -2,13 +2,10 @@ import { Brief } from '#components/Brief';
 import Script from '#components/Script';
 import { BoardOverview } from '#modules/BoardScene/BoardOverview';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { convertScriptFromBrief, fetchImagesBasedOnFullScript } from './requests';
-import './App.scss';
 import { BoardData } from '#logic/types';
-import { generateBoardTemplate } from '../src/modules/BoardScene/data';
-
-
+import './App.scss';
 
 // const scriptData = [
 //   " An animated map of Ukraine appears on the screen. Red lines start from one city and travel to another, representing package deliveries.",
@@ -23,6 +20,12 @@ import { generateBoardTemplate } from '../src/modules/BoardScene/data';
 //   " A customer receives a package and signs for it on a digital screen held by the courier. They both smile and exchange pleasantries.",
 //   " The New Post logo appears on screen, with the tagline \"Delivering smiles across Ukraine\" underneath it. The screen fades to black."
 // ]
+
+const scriptData = [
+  "A group of people sitting around a table in a conference room. They are discussing and gesturing. One person is holding a storyboard and pointing to it. They all look engaged and focused.",
+  "A close - up of a creative director's face. They are looking at a computer screen, eyebrows raised in surprise and delight. The reflection of the screen lights up their face.",
+  "An illustrator sitting at a desk, surrounded by sketchbooks and art supplies.They are drawing on a tablet with great concentration, creating detailed illustrations.",
+]
 const placeholder = `I want to create a video which will explain how our business work. We are delivery service which deliver packages across Ukraine.
 Our company name is 'New Post'.Brand color is red.Please make an accent in illustrations to make illustrations in red, white,
   black tones.In this video I want to engage customers use our new service.post office which feature is that it can be placed in a
@@ -30,18 +33,19 @@ lot of places so user can get it's package in less that 100 meters from home ins
 station.I want you to create a plot where user want to get the packages.Checks the nearest delivery station, checks the map but
 it's too far. Then it see that on the map new post office located just near to him. User get the package in few minutes`
 
-const defaultData = generateBoardTemplate();
-const dummySceneData = {
-  description: "Some Description",
-  sceneId: 'sceneId1',
-  images: []
-}
+// const defaultData = generateBoardTemplate();
+// const dummySceneData = {
+//   description: "Some Description",
+//   sceneId: 'sceneId1',
+//   images: []
+// }
 
 function App() {
-  const [script, setScript] = useState([]);
+  const [script, setScript] = useState(scriptData);
   const [brief, setBrief] = useState(placeholder);
-  const [images, setImages] = useState([dummySceneData]);
-  const [scenesArr, setScenesArr] = useState<BoardData>(defaultData);
+  // const [sceneImages, setSceneImages] = useState([dummySceneData]);
+  const [scenesArr, setScenesArr] = useState<BoardData>([]);
+  const [isFetchingImages, setIsFetchingImages] = useState(false);
 
 
   const { isLoading, isFetching, data, refetch: generateScriptBasedOnBrief } = useQuery(
@@ -51,22 +55,50 @@ function App() {
       enabled: false,
     },
   );
-  // const { isFetching: isFetchingImages, data: imagesData, refetch: generateImagesBasedOnScript } = useMutation(
-  //   ['scenesImages', { scenesData: scenesArr }],
-  //   fetchImagesBasedOnFullScript,
-  //   {
-  //     enabled: false,
-  //   },
-  // );
+  // const { isLoading: isFetchingImages, data: sceneImagesData, mutate: generateImagesBasedOnScript } = useMutation(fetchImagesBasedOnFullScript);
 
-
-  async function generateImagesBasedOnScript() {
-    await fetchImagesBasedOnFullScript(scenesArr)
+  function mapImagesToScenes(imageData) {
+    setScenesArr(prevScenesArr => {
+      return prevScenesArr.map((sceneData, index) => {
+        if (sceneData.sceneId === imageData.sceneId) {
+          return {
+            ...imageData,
+            images: [...sceneData.images, { img64: imageData.img64, id: imageData.id }],
+          };
+        }
+        return sceneData;
+      });
+    });
   }
 
+  async function runRequests() {
+    const mappedScenesPayload = scenesArr.map((scene, index) => {
+      return [{
+        description: scene.description,
+        scene_id: scene.sceneId,
+        index,
+        from_scratch: true,
+        example_img_id: null
+      }]
+    })
+    setIsFetchingImages(true)
+    Promise.all(mappedScenesPayload.map(async (payload) => {
+      const data = await fetchImagesBasedOnFullScript(JSON.stringify(payload))
+      mapImagesToScenes(data[0])
+    })).then(() => {
+      setIsFetchingImages(false)
+    })
+
+  }
+
+
+
   useEffect(() => {
-    setScript(data)
+    if (data) {
+      setScript(data)
+    }
   }, [data]);
+
 
   return (
     <div className='app'>
@@ -82,9 +114,10 @@ function App() {
           />
           <Script
             script={script}
+            scenesArr={scenesArr}
             setScript={setScript}
             isFetchingScript={isLoading || isFetching}
-            generateImagesBasedOnScript={generateImagesBasedOnScript}
+            generateImagesBasedOnScript={runRequests}
           />
         </section>
         <section className="board-container">
@@ -92,7 +125,7 @@ function App() {
             script={script}
             setScript={setScript}
             isFetchingScript={isLoading || isFetching}
-            isFetchingImages={false}
+            isFetchingImages={isFetchingImages}
             scenesArr={scenesArr}
             setScenesArr={setScenesArr}
           />

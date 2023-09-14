@@ -1,15 +1,14 @@
+import { v4 } from 'uuid';
 import { SceneData } from './logic/types';
 
-export const generateSceneTemplate = (index: number): SceneData => {
+export const generateSceneTemplate = (index: number, script = []): SceneData => {
   return {
     images: [],
-    image: undefined,
-    description: '',
-    fromScratch: true,
-    index
+    description: script[index],
+    sceneId: v4(),
   };
 };
 
-export const generateBoardTemplate = (): SceneData[] => {
-  return [generateSceneTemplate(0),];
-};
+// export const generateBoardTemplate = (): SceneData[] => {
+//   return [generateSceneTemplate(0),];
+// };

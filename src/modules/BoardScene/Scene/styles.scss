@@ -50,8 +50,6 @@
                     margin: 0 8px;
                     cursor: pointer;
                     transition: all 0.15s ease-in-out;
-
-
                 }
             }
         }
@@ -61,6 +59,20 @@
             height: 360px;
             margin-bottom: 16px;
             border-radius: 10px;
+            background-color: rgb(220, 220, 220);
+
+            &.placeholder {
+                display: flex;
+                align-items: center;
+                justify-self: center;
+                font-size: 999px;
+                color: grey;
+
+                .icon {
+                    width: 200px;
+                    margin: 0 auto;
+                }
+            }
         }
     }
 
